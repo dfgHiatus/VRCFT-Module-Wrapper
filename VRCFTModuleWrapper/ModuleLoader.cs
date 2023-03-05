@@ -1,8 +1,6 @@
 ﻿using FrooxEngine;
 using HarmonyLib;
 using NeosModLoader;
-using System;
-using System.Collections.Generic;
 using System.Threading;
 using VRCFTModuleWrapper;
 using VRCFTModuleWrapper.VRCFT;
@@ -18,7 +16,6 @@ namespace ModuleLoader
 
         internal static ModConfiguration config;
         internal static readonly CancellationTokenSource MasterCancellationTokenSource = new CancellationTokenSource();
-        private static Thread thread;
 
         # region Config Keys
         [AutoRegisterConfigKey]
@@ -66,7 +63,7 @@ namespace ModuleLoader
                 Engine.Current.InputInterface.RegisterInputDriver(new MouthDevice());
             }
 
-            thread = new Thread(new ThreadStart(PollModules));
+            new Thread(new ThreadStart(PollModules));
 
             Engine.Current.OnShutdown += Teardown;
 
