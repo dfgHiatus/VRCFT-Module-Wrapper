@@ -28,6 +28,7 @@ namespace VRCFTModuleWrapper
             if (UnifiedLibManager.EyeStatus != ModuleState.Uninitialized)
             {
                 eyes.IsEyeTrackingActive = Engine.Current.InputInterface.VR_Active;
+                eyes.IsDeviceActive = UnifiedLibManager.EyeStatus != ModuleState.Uninitialized;
 
                 UpdateEye(UnifiedTrackingData.LatestEyeData.Left, eyes.LeftEye);
                 UpdateEye(UnifiedTrackingData.LatestEyeData.Right, eyes.RightEye);

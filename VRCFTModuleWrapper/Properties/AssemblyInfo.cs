@@ -4,12 +4,12 @@ using System.Runtime.InteropServices;
 // General Information about an assembly is controlled through the following
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("ModNameGoesHere")]
-[assembly: AssemblyDescription("")]
+[assembly: AssemblyTitle("VRCFTModuleWrapper")]
+[assembly: AssemblyDescription("A VRCFT module wrapper for NeosVR")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("")]
-[assembly: AssemblyProduct("ModNameGoesHere")]
-[assembly: AssemblyCopyright("Copyright ©  2021")]
+[assembly: AssemblyCompany("Hiatus Labs")]
+[assembly: AssemblyProduct("VRCFTModuleWrapper")]
+[assembly: AssemblyCopyright("Hiatus Labs ©  2023")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
