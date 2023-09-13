@@ -1,6 +1,6 @@
 ﻿using BaseX;
 using FrooxEngine;
-using VRCFTModuleWrapper.VRCFT;
+using VRCFaceTracking.Core.Params.Expressions;
 
 namespace VRCFTModuleWrapper
 {
@@ -25,36 +25,67 @@ namespace VRCFTModuleWrapper
 
         public void UpdateInputs(float deltaTime)
         {
-            if (UnifiedLibManager.EyeStatus != ModuleState.Uninitialized)
-            {
-                eyes.IsEyeTrackingActive = Engine.Current.InputInterface.VR_Active;
-                eyes.IsDeviceActive = UnifiedLibManager.EyeStatus != ModuleState.Uninitialized;
+            eyes.IsEyeTrackingActive = Engine.Current.InputInterface.VR_Active;
+            eyes.IsDeviceActive = Engine.Current.InputInterface.VR_Active;
 
-                UpdateEye(UnifiedTrackingData.LatestEyeData.Left, eyes.LeftEye);
-                UpdateEye(UnifiedTrackingData.LatestEyeData.Right, eyes.RightEye);
-                UpdateEye(UnifiedTrackingData.LatestEyeData.Combined, eyes.CombinedEye);
-                
-                eyes.ComputeCombinedEyeParameters();
-                eyes.FinishUpdate();
-            }
+            UpdateEye(
+                eyes.LeftEye,
+                Expressions.VRCFTExpressionMap.GetByKey1(UnifiedExpressions.LeftEyeX),
+                Expressions.VRCFTExpressionMap.GetByKey1(UnifiedExpressions.LeftEyeY),
+                Expressions.VRCFTExpressionMap.GetByKey1(UnifiedExpressions.LeftEyeLid),
+                Expressions.VRCFTExpressionMap.GetByKey1(UnifiedExpressions.EyeWideLeft),
+                Expressions.VRCFTExpressionMap.GetByKey1(UnifiedExpressions.EyeSquintLeft),
+                Expressions.VRCFTExpressionMap.GetByKey1(UnifiedExpressions.EyesDilation)
+                );
+
+            UpdateEye(
+                eyes.RightEye,
+                Expressions.VRCFTExpressionMap.GetByKey1(UnifiedExpressions.RightEyeX),
+                Expressions.VRCFTExpressionMap.GetByKey1(UnifiedExpressions.RightEyeY),
+                Expressions.VRCFTExpressionMap.GetByKey1(UnifiedExpressions.RightEyeLid),
+                Expressions.VRCFTExpressionMap.GetByKey1(UnifiedExpressions.EyeWideLeft),
+                Expressions.VRCFTExpressionMap.GetByKey1(UnifiedExpressions.EyeSquintLeft),
+                Expressions.VRCFTExpressionMap.GetByKey1(UnifiedExpressions.EyesDilation)
+                );
+
+            UpdateEye(
+                eyes.CombinedEye,
+                Expressions.VRCFTExpressionMap.GetByKey1(UnifiedExpressions.EyesX),
+                Expressions.VRCFTExpressionMap.GetByKey1(UnifiedExpressions.EyesY),
+                Expressions.VRCFTExpressionMap.GetByKey1(UnifiedExpressions.CombinedEyeLid),
+                Expressions.VRCFTExpressionMap.GetByKey1(UnifiedExpressions.EyeWideLeft),
+                Expressions.VRCFTExpressionMap.GetByKey1(UnifiedExpressions.EyeSquintLeft),
+                Expressions.VRCFTExpressionMap.GetByKey1(UnifiedExpressions.EyesDilation)
+                );
+
+            eyes.ComputeCombinedEyeParameters();
+            eyes.FinishUpdate();
         }
         
-        private void UpdateEye(VRCFT.Eye data, FrooxEngine.Eye eye)
+        private void UpdateEye(
+            Eye eye,
+            float lookX,
+            float lookY,
+            float openness,
+            float widen,
+            float squeeze,
+            float dilation
+            )
         {
             eye.IsDeviceActive = Engine.Current.InputInterface.VR_Active;
-            eye.IsTracking = UnifiedLibManager.EyeStatus != ModuleState.Uninitialized;
+            eye.IsTracking = Engine.Current.InputInterface.VR_Active;
 
             if (eye.IsTracking)
             {
-                eye.UpdateWithDirection(Project2DTo3D(data.Look.x, data.Look.y));
+                eye.UpdateWithDirection(Project2DTo3D(lookX, lookY));
                 eye.RawPosition = float3.Zero;
-                eye.PupilDiameter = UnifiedTrackingData.LatestEyeData.EyesPupilDiameter; // EyesDilation ?
-            }
+                eye.PupilDiameter = dilation;
 
-            eye.Openness = data.Openness;
-            eye.Widen = data.Widen;
-            eye.Squeeze = data.Squeeze;
-            eye.Frown = 0f;
+                eye.Openness = openness;
+                eye.Widen = widen;
+                eye.Squeeze = squeeze;
+                eye.Frown = 0f;
+            }
         }
 
         private float3 Project2DTo3D(float x, float y) => new float3(MathX.Tan(x), MathX.Tan(y), 1f).Normalized;

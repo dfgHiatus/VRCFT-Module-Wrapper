@@ -1,6 +1,6 @@
 ﻿using BaseX;
 using FrooxEngine;
-using VRCFTModuleWrapper.VRCFT;
+using VRCFaceTracking.Core.Params.Expressions;
 
 namespace VRCFTModuleWrapper
 {
@@ -25,54 +25,49 @@ namespace VRCFTModuleWrapper
 
         public void UpdateInputs(float deltaTime)
         {
-            if (UnifiedLibManager.LipStatus != ModuleState.Uninitialized)
-            {
-                mouth.IsDeviceActive = Engine.Current.InputInterface.VR_Active;
-                mouth.IsTracking = UnifiedLibManager.LipStatus != ModuleState.Uninitialized;
+            mouth.IsDeviceActive = Engine.Current.InputInterface.VR_Active;
+            mouth.IsTracking = Engine.Current.InputInterface.VR_Active;
 
-                mouth.CheekLeftPuffSuck = 
-                    UnifiedTrackingData.LatestLipData.LatestShapes[(int)LipShape_v2.CheekPuffLeft] -
-                    UnifiedTrackingData.LatestLipData.LatestShapes[(int)LipShape_v2.CheekSuck];
+            mouth.CheekLeftPuffSuck =
+                 Expressions.VRCFTExpressionMap.GetByKey1(UnifiedExpressions.CheekPuffLeft) -
+                 Expressions.VRCFTExpressionMap.GetByKey1(UnifiedExpressions.CheekSuckLeft);
 
-                mouth.CheekRightPuffSuck =
-                    UnifiedTrackingData.LatestLipData.LatestShapes[(int)LipShape_v2.CheekPuffRight] -
-                    UnifiedTrackingData.LatestLipData.LatestShapes[(int)LipShape_v2.CheekSuck];
+            mouth.CheekRightPuffSuck =
+                 Expressions.VRCFTExpressionMap.GetByKey1(UnifiedExpressions.CheekPuffRight) -
+                 Expressions.VRCFTExpressionMap.GetByKey1(UnifiedExpressions.CheekSuckRight);
 
-                mouth.Jaw = new float3(
-                    UnifiedTrackingData.LatestLipData.LatestShapes[(int)LipShape_v2.JawLeft] -
-                    UnifiedTrackingData.LatestLipData.LatestShapes[(int)LipShape_v2.JawRight],
-                    UnifiedTrackingData.LatestLipData.LatestShapes[(int)LipShape_v2.MouthApeShape],
-                    UnifiedTrackingData.LatestLipData.LatestShapes[(int)LipShape_v2.JawForward]); // TODO Review
+            mouth.Jaw = new float3(
+                 (Expressions.VRCFTExpressionMap.GetByKey1(UnifiedExpressions.JawLeft) -
+                 Expressions.VRCFTExpressionMap.GetByKey1(UnifiedExpressions.JawRight)),
+                 0f,
+                 Expressions.VRCFTExpressionMap.GetByKey1(UnifiedExpressions.JawForward));
 
-                mouth.JawOpen = UnifiedTrackingData.LatestLipData.LatestShapes[(int)LipShape_v2.JawOpen];
+            mouth.JawOpen =  Expressions.VRCFTExpressionMap.GetByKey1(UnifiedExpressions.JawOpen);
 
-                //mouth.LipBottomOverturn
-                //mouth.LipBottomOverUnder
-                //mouth.LipLowerHorizontal
-                //mouth.LipLowerLeftRaise
-                //mouth.LipLowerRightRaise
+            //mouth.LipBottomOverturn
+            //mouth.LipBottomOverUnder
+            //mouth.LipLowerHorizontal
+            //mouth.LipLowerLeftRaise
+            //mouth.LipLowerRightRaise
 
-                mouth.MouthLeftSmileFrown =
-                    UnifiedTrackingData.LatestLipData.LatestShapes[(int)LipShape_v2.MouthSmileLeft] -
-                    UnifiedTrackingData.LatestLipData.LatestShapes[(int)LipShape_v2.MouthSadLeft];
+            mouth.MouthLeftSmileFrown =
+                 Expressions.VRCFTExpressionMap.GetByKey1(UnifiedExpressions.MouthCornerPullLeft) -
+                 Expressions.VRCFTExpressionMap.GetByKey1(UnifiedExpressions.MouthFrownLeft);
 
-                mouth.MouthPout = UnifiedTrackingData.LatestLipData.LatestShapes[(int)LipShape_v2.MouthPout];
+            // mouth.MouthPout =  Expressions.VRCFTExpressionMap.GetByKey1(UnifiedExpressions.MouthPout);
 
-                mouth.MouthRightSmileFrown =
-                    UnifiedTrackingData.LatestLipData.LatestShapes[(int)LipShape_v2.MouthSmileRight] -
-                    UnifiedTrackingData.LatestLipData.LatestShapes[(int)LipShape_v2.MouthSadRight];
+            mouth.MouthRightSmileFrown =
+                 Expressions.VRCFTExpressionMap.GetByKey1(UnifiedExpressions.MouthCornerPullRight) -
+                 Expressions.VRCFTExpressionMap.GetByKey1(UnifiedExpressions.MouthFrownRight);
 
-                mouth.Tongue = new float3(
-                    UnifiedTrackingData.LatestLipData.LatestShapes[(int)LipShape_v2.TongueLeft] -
-                    UnifiedTrackingData.LatestLipData.LatestShapes[(int)LipShape_v2.MouthSadRight],
-                    UnifiedTrackingData.LatestLipData.LatestShapes[(int)LipShape_v2.TongueUp] -
-                    UnifiedTrackingData.LatestLipData.LatestShapes[(int)LipShape_v2.TongueDown],
-                    MathX.Clamp01(
-                        UnifiedTrackingData.LatestLipData.LatestShapes[(int)LipShape_v2.TongueLongStep1] +
-                        UnifiedTrackingData.LatestLipData.LatestShapes[(int)LipShape_v2.TongueLongStep2]));
+            mouth.Tongue = new float3(
+                 (Expressions.VRCFTExpressionMap.GetByKey1(UnifiedExpressions.TongueLeft) -
+                 Expressions.VRCFTExpressionMap.GetByKey1(UnifiedExpressions.TongueRight)),
+                 (Expressions.VRCFTExpressionMap.GetByKey1(UnifiedExpressions.TongueUp) -
+                 Expressions.VRCFTExpressionMap.GetByKey1(UnifiedExpressions.TongueDown)),
+                 Expressions.VRCFTExpressionMap.GetByKey1(UnifiedExpressions.TongueOut));
 
-                mouth.TongueRoll = UnifiedTrackingData.LatestLipData.LatestShapes[(int)LipShape_v2.TongueRoll];
-            }
+            mouth.TongueRoll =  Expressions.VRCFTExpressionMap.GetByKey1(UnifiedExpressions.TongueRoll);
         }
     }
 }

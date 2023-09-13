@@ -5,6 +5,8 @@ VisualStudioVersion = 17.4.33110.190
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VRCFTModuleWrapper", "VRCFTModuleWrapper\VRCFTModuleWrapper.csproj", "{0322B2EF-7452-479D-BAE2-FCAB75033337}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VRCFTModuleWrapper.Tests", "VRCFaceTracking.Tests\VRCFTModuleWrapper.Tests.csproj", "{622D808E-3C7C-4CC9-8DE5-0003F040AC26}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -15,6 +17,10 @@ Global
 		{0322B2EF-7452-479D-BAE2-FCAB75033337}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{0322B2EF-7452-479D-BAE2-FCAB75033337}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{0322B2EF-7452-479D-BAE2-FCAB75033337}.Release|Any CPU.Build.0 = Release|Any CPU
+		{622D808E-3C7C-4CC9-8DE5-0003F040AC26}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{622D808E-3C7C-4CC9-8DE5-0003F040AC26}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{622D808E-3C7C-4CC9-8DE5-0003F040AC26}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{622D808E-3C7C-4CC9-8DE5-0003F040AC26}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
